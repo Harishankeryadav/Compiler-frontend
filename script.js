@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('runButton').addEventListener('click', function() {
-        const language = document.getElementById('language').value;
         const code = codeMirrorEditor.getValue();
 
         document.querySelector('.CodeMirror').style.flex = 6;
@@ -36,22 +35,22 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('loader').style.display = 'block';
         document.getElementById('output').innerText = '';
 
-        fetch('http://your-backend-url/compile', {
+        fetch('http://localhost:5500/api/submit-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ language, code })
+            body: JSON.stringify({ code })
         })
         .then(response => response.json())
         .then(data => {
             document.getElementById('loader').style.display = 'none';
-            document.getElementById('output').innerText = data.output;
+            document.getElementById('output').innerText = data.message + "\n" + (data.code || '');
         })
         .catch(error => {
             console.error('Error:', error);
             document.getElementById('loader').style.display = 'none';
-            document.getElementById('output').innerText = 'Error occurred while compiling the code.';
+            document.getElementById('output').innerText = 'Error occurred while saving the code.';
         });
     });
 
